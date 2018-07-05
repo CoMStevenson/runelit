@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
 
 @PluginDescriptor(
 	name = "Developer Tools",
+	tags = {"panel"},
 	developerPlugin = true
 )
 @Slf4j
@@ -238,6 +239,15 @@ public class DevToolsPlugin extends Plugin
 				Player localPlayer = client.getLocalPlayer();
 				localPlayer.setGraphic(id);
 				localPlayer.setSpotAnimFrame(0);
+				break;
+			}
+			case "transform":
+			{
+				int id = Integer.parseInt(args[0]);
+				Player player = client.getLocalPlayer();
+				player.getPlayerComposition().setTransformedNpcId(id);
+				player.setIdlePoseAnimation(-1);
+				player.setPoseAnimation(-1);
 				break;
 			}
 		}

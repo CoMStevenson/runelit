@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Seth <http://github.com/sethtroll>
+ * Copyright (c) 2018 kulers
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,46 +22,59 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.screenshot;
+package net.runelite.client.plugins.inventorytags;
 
-import java.awt.event.KeyEvent;
-import java.util.Date;
-import javax.inject.Inject;
-import net.runelite.client.input.KeyListener;
-import static net.runelite.client.plugins.screenshot.ScreenshotPlugin.format;
+import java.awt.Color;
+import net.runelite.client.config.Config;
+import net.runelite.client.config.ConfigGroup;
+import net.runelite.client.config.ConfigItem;
 
-public class ScreenshotInput implements KeyListener
+@ConfigGroup("inventorytags")
+public interface InventoryTagsConfig extends Config
 {
-	private final ScreenshotConfig config;
-	private final ScreenshotPlugin plugin;
+	String GROUP = "inventorytags";
 
-	@Inject
-	ScreenshotInput(ScreenshotConfig config, ScreenshotPlugin plugin)
+	@ConfigItem(
+		position = 0,
+		keyName = "groupColor1",
+		name = "Group 1 Color",
+		description = "Color of the Tag"
+	)
+	default Color getGroup1Color()
 	{
-		this.config = config;
-		this.plugin = plugin;
+		return new Color(255, 0, 0);
 	}
 
-	@Override
-	public void keyPressed(KeyEvent event)
+	@ConfigItem(
+		position = 1,
+		keyName = "groupColor2",
+		name = "Group 2 Color",
+		description = "Color of the Tag"
+	)
+	default Color getGroup2Color()
 	{
+		return new Color(0, 255, 0);
 	}
 
-	@Override
-	public void keyTyped(KeyEvent event)
+	@ConfigItem(
+		position = 2,
+		keyName = "groupColor3",
+		name = "Group 3 Color",
+		description = "Color of the Tag"
+	)
+	default Color getGroup3Color()
 	{
+		return new Color(0, 0, 255);
 	}
 
-	@Override
-	public void keyReleased(KeyEvent event)
+	@ConfigItem(
+		position = 3,
+		keyName = "groupColor4",
+		name = "Group 4 Color",
+		description = "Color of the Tag"
+	)
+	default Color getGroup4Color()
 	{
-		if (!config.isScreenshotEnabled())
-			return;
-
-		if (event.getKeyCode() == KeyEvent.VK_INSERT)
-		{
-			plugin.takeScreenshot(format(new Date()));
-		}
+		return new Color(255, 0, 255);
 	}
-
 }

@@ -86,7 +86,9 @@ import static net.runelite.client.plugins.timers.GameTimer.VENGEANCEOTHER;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 
 @PluginDescriptor(
-	name = "Timers"
+	name = "Timers",
+	description = "Show various timers in an infobox",
+	tags = {"combat", "items", "magic", "potions", "prayer", "overlay"}
 )
 public class TimersPlugin extends Plugin
 {
@@ -288,6 +290,16 @@ public class TimersPlugin extends Plugin
 			createGameTimer(SUPERANTIPOISON);
 			return;
 		}
+
+		if (config.showStamina()
+			&& event.getMenuOption().contains("Drink")
+			&& (event.getId() == ItemID.STAMINA_MIX1
+			|| event.getId() == ItemID.STAMINA_MIX2))
+		{
+			// Needs menu option hook because mixes use a common drink message, distinct from their standard potion messages
+			createGameTimer(STAMINA);
+			return;
+		}
 	}
 
 	@Subscribe
@@ -419,9 +431,19 @@ public class TimersPlugin extends Plugin
 			createGameTimer(CHARGE);
 		}
 
-		if (event.getMessage().equals("<col=ef1020>Your magical charge fades away.</col>"))
+		if (config.showCharge() && event.getMessage().equals("<col=ef1020>Your magical charge fades away.</col>"))
 		{
 			removeGameTimer(CHARGE);
+		}
+
+		if (config.showStaffOfTheDead() && event.getMessage().contains("Spirits of deceased evildoers offer you their protection"))
+		{
+			createGameTimer(STAFF_OF_THE_DEAD);
+		}
+
+		if (config.showStaffOfTheDead() && event.getMessage().contains("Your protection fades away"))
+		{
+			removeGameTimer(STAFF_OF_THE_DEAD);
 		}
 	}
 
@@ -435,7 +457,9 @@ public class TimersPlugin extends Plugin
 			return;
 		}
 
-		if (config.showVengeanceOther() && actor.getAnimation() == AnimationID.VENGEANCE_OTHER)
+		if (config.showVengeanceOther()
+			&& actor.getAnimation() == AnimationID.ENERGY_TRANSFER_VENGEANCE_OTHER
+			&& actor.getInteracting().getGraphic() == VENGEANCEOTHER.getGraphicId())
 		{
 			createGameTimer(VENGEANCEOTHER);
 		}
@@ -460,11 +484,6 @@ public class TimersPlugin extends Plugin
 		if (config.showVengeance() && actor.getGraphic() == VENGEANCE.getGraphicId())
 		{
 			createGameTimer(VENGEANCE);
-		}
-
-		if (config.showStaffOfTheDead() && actor.getGraphic() == STAFF_OF_THE_DEAD.getGraphicId())
-		{
-			createGameTimer(STAFF_OF_THE_DEAD);
 		}
 
 		if (config.showFreezes())

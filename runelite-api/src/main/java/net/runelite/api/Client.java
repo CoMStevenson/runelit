@@ -33,15 +33,30 @@ import javax.annotation.Nullable;
 import net.runelite.api.annotations.VisibleForDevtools;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.hooks.Callbacks;
 import net.runelite.api.vars.AccountType;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
+import org.slf4j.Logger;
 
 /**
  * Represents the RuneScape client.
  */
 public interface Client extends GameEngine
 {
+	/**
+	 * The client invokes these callbacks to communicate to
+	 * @return
+	 */
+	Callbacks getCallbacks();
+
+	/**
+	 * Retrieve a global logger for the client.
+	 * This is most useful for mixins which can't have their own.
+	 * @return
+	 */
+	Logger getLogger();
+
 	/**
 	 * Gets a list of all valid players from the player cache.
 	 *
@@ -398,15 +413,6 @@ public interface Client extends GameEngine
 	Widget getWidget(WidgetInfo widget);
 
 	/**
-	 * Gets an array of widgets that correspond to the passed group ID.
-	 *
-	 * @param groupId the group ID
-	 * @return the widget group
-	 * @see net.runelite.api.widgets.WidgetID
-	 */
-	Widget[] getGroup(int groupId);
-
-	/**
 	 * Gets a widget by its raw group ID and child ID.
 	 * <p>
 	 * Note: Use {@link #getWidget(WidgetInfo)} for a more human-readable
@@ -677,7 +683,7 @@ public interface Client extends GameEngine
 	 * @return the widget node component table
 	 * @see WidgetNode
 	 */
-	HashTable getComponentTable();
+	HashTable<WidgetNode> getComponentTable();
 
 	/**
 	 * Gets an array of current grand exchange offers.
